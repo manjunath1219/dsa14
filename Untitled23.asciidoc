@@ -1,0 +1,1113 @@
++*In[ ]:*+
+[source, ipython3]
+----
+💡 **Question 1**
+
+Given a linked list of **N** nodes such that it may contain a loop.
+
+A loop here means that the last node of the link list is connected to the node at position X(1-based index). If the link list does not have any loop, X=0.
+
+Remove the loop from the linked list, if it is present, i.e. unlink the last node which is forming the loop.
+
+**Example 1:**
+
+```
+Input:
+N = 3
+value[] = {1,3,4}
+X = 2
+Output:1
+Explanation:The link list looks like
+1 -> 3 -> 4
+     ^    |
+     |____|
+A loop is present. If you remove it
+successfully, the answer will be 1.
+
+```
+
+**Example 2:**
+
+```
+Input:
+N = 4
+value[] = {1,8,3,4}
+X = 0
+Output:1
+Explanation:The Linked list does not
+contains any loop.
+```
+
+**Example 3:**
+
+Input:
+N = 4
+value[] = {1,2,3,4}
+X = 1
+Output:1
+Explanation:The link list looks like
+1 -> 2 -> 3 -> 4
+^              |
+|______________|
+A loop is present.
+If you remove it successfully,
+the answer will be 1.
+----
+
+
++*In[1]:*+
+[source, ipython3]
+----
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+def removeLoop(head):
+    # Step 1: Initialize slowPtr and fastPtr
+    slowPtr = head
+    fastPtr = head
+
+    # Step 2: Find the meeting point or detect the absence of a loop
+    while fastPtr and fastPtr.next:
+        slowPtr = slowPtr.next
+        fastPtr = fastPtr.next.next
+        if slowPtr == fastPtr:
+            break
+    else:
+        return head  # No loop found, return the head of the linked list
+
+    # Step 3: Reset slowPtr to the head and keep fastPtr at the meeting point
+    slowPtr = head
+
+    # Step 4: Move both pointers one step at a time until they meet again
+    while slowPtr.next != fastPtr.next:
+        slowPtr = slowPtr.next
+        fastPtr = fastPtr.next
+
+    # Step 5: Set the next pointer of the last node in the loop to None
+    fastPtr.next = None
+
+    # Step 6: Return the head of the linked list
+    return head
+# Example 1
+# LinkedList: 1 -> 3 -> 4
+head = Node(1)
+head.next = Node(3)
+head.next.next = Node(4)
+head.next.next.next = head.next  # Creating a loop
+
+head = removeLoop(head)
+
+# Printing the updated linked list
+current = head
+while current is not None:
+    print(current.data, end=" ")
+    current = current.next
+----
+
+
++*Out[1]:*+
+----
+1 3 4 ----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+# Example 2
+# LinkedList: 1 -> 8 -> 3 -> 4
+head = Node(1)
+head.next = Node(8)
+head.next.next = Node(3)
+head.next.next.next = Node(4)
+
+head = removeLoop(head)
+
+# Printing the updated linked list
+current = head
+while current is not None:
+    print(current.data, end=" ")
+    current = current.next
+----
+
+
++*Out[2]:*+
+----
+1 8 3 4 ----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+# Example 3
+# LinkedList: 1 -> 2 -> 3 -> 4
+head = Node(1)
+head.next = Node(2)
+head.next.next = Node(3)
+head.next.next.next = Node(4)
+head.next.next.next.next = head  # Creating a loop
+
+head = removeLoop(head)
+
+# Printing the updated linked list
+current = head
+while current is not None:
+    print(current.data, end=" ")
+    current = current.next
+----
+
+
++*Out[4]:*+
+----
+1 ----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+💡 **Question 2**
+
+A number **N** is represented in Linked List such that each digit corresponds to a node in linked list. You need to add 1 to it.
+
+**Example 1:**
+
+```
+Input:
+LinkedList: 4->5->6
+Output:457
+
+```
+
+**Example 2:**
+
+Input:
+LinkedList: 1->2->3
+Output:124
+----
+
+
++*In[5]:*+
+[source, ipython3]
+----
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+def addOne(head):
+    # Step 1: Traverse the linked list from right to left
+    current = head
+    lastNon9 = None
+    while current:
+        if current.data != 9:
+            lastNon9 = current
+        current = current.next
+
+    # Step 2: Check if an extra node needs to be added
+    if lastNon9 is None:
+        newHead = Node(1)
+        newHead.next = head
+        current = head
+        while current:
+            current.data = 0
+            current = current.next
+        return newHead
+
+    # Step 3: Increment the nodes and reset the nodes to the right
+    lastNon9.data += 1
+    current = lastNon9.next
+    while current:
+        current.data = 0
+        current = current.next
+
+    return head
+# Example 1
+# LinkedList: 4 -> 5 -> 6
+head = Node(4)
+head.next = Node(5)
+head.next.next = Node(6)
+
+head = addOne(head)
+
+# Printing the updated linked list
+current = head
+while current is not None:
+    print(current.data, end="")
+    current = current.next
+----
+
+
++*Out[5]:*+
+----
+457----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+# Example 2
+# LinkedList: 1 -> 2 -> 3
+head = Node(1)
+head.next = Node(2)
+head.next.next = Node(3)
+
+head = addOne(head)
+
+# Printing the updated linked list
+current = head
+while current is not None:
+    print(current.data, end="")
+    current = current.next
+----
+
+
++*Out[6]:*+
+----
+124----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+💡 **Question 3**
+
+Given a Linked List of size N, where every node represents a sub-linked-list and contains two pointers:(i) a **next** pointer to the next node,(ii) a **bottom** pointer to a linked list where this node is head.Each of the sub-linked-list is in sorted order.Flatten the Link List such that all the nodes appear in a single level while maintaining the sorted order. **Note:** The flattened list will be printed using the bottom pointer instead of next pointer.
+
+**Example 1:**
+
+```
+Input:
+5 -> 10 -> 19 -> 28
+|     |     |     |
+7     20    22   35
+|           |     |
+8          50    40
+|                 |
+30               45
+Output: 5-> 7-> 8- > 10 -> 19-> 20->
+22-> 28-> 30-> 35-> 40-> 45-> 50.
+Explanation:
+The resultant linked lists has every
+node in a single level.(Note:| represents the bottom pointer.)
+
+```
+
+**Example 2:**
+
+Input:
+5 -> 10 -> 19 -> 28
+|          |
+7          22
+|          |
+8          50
+|
+30
+Output: 5->7->8->10->19->22->28->30->50
+Explanation:
+The resultant linked lists has every
+node in a single level.
+
+(Note:| represents the bottom pointer.)
+----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.bottom = None
+
+def merge(a, b):
+    # Merge two sorted linked lists
+    if a is None:
+        return b
+    if b is None:
+        return a
+
+    result = None
+    if a.data <= b.data:
+        result = a
+        result.bottom = merge(a.bottom, b)
+    else:
+        result = b
+        result.bottom = merge(a, b.bottom)
+
+    result.next = None
+    return result
+
+def flatten(root):
+    if root is None or root.next is None:
+        return root
+
+    # Merge the current list with the flattened list
+    root.next = flatten(root.next)
+
+    # Merge the merged list with the bottom list
+    root = merge(root, root.next)
+
+    return root
+# Example 1
+head = Node(5)
+head.next = Node(10)
+head.next.next = Node(19)
+head.next.next.next = Node(28)
+
+head.bottom = Node(7)
+head.bottom.bottom = Node(8)
+head.bottom.bottom.bottom = Node(30)
+
+head.next.bottom = Node(20)
+
+head.next.next.bottom = Node(22)
+head.next.next.next.bottom = Node(35)
+
+head.next.next.bottom.next = Node(50)
+head.next.next.bottom.next.bottom = Node(40)
+
+head.next.next.bottom.next.bottom.bottom = Node(45)
+
+head = flatten(head)
+
+# Printing the flattened linked list
+current = head
+while current is not None:
+    print(current.data, end="-> ")
+    current = current.bottom
+----
+
+
++*Out[7]:*+
+----
+5-> 7-> 8-> 10-> 19-> 20-> 22-> 28-> 30-> 35-> ----
+
+
++*In[8]:*+
+[source, ipython3]
+----
+# Example 2
+head = Node(5)
+head.next = Node(10)
+head.next.next = Node(19)
+head.next.next.next = Node(28)
+
+head.bottom = Node(7)
+head.bottom.bottom = Node(8)
+head.bottom.bottom.bottom = Node(30)
+
+head.next.bottom = Node(22)
+head.next.bottom.bottom = Node(50)
+
+head = flatten(head)
+
+# Printing the flattened linked list
+current = head
+while current is not None:
+    print(current.data, end="-> ")
+    current = current.bottom
+----
+
+
++*Out[8]:*+
+----
+5-> 7-> 8-> 10-> 19-> 22-> 28-> 30-> 50-> ----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+<aside>
+💡 **Question 4**
+
+You are given a special linked list with **N** nodes where each node has a next pointer pointing to its next node. You are also given **M** random pointers, where you will be given **M** number of pairs denoting two nodes **a** and **b**  **i.e. a->arb = b** (arb is pointer to random node)**.**
+
+Construct a copy of the given list. The copy should consist of exactly **N** new nodes, where each new node has its value set to the value of its corresponding original node. Both the next and random pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. None of the pointers in the new list should point to nodes in the original list.
+
+For example, if there are two nodes **X** and **Y** in the original list, where **X.arb** **-->** **Y**, then for the corresponding two nodes **x** and **y** in the copied list, **x.arb --> y.**
+
+Return the head of the copied linked list.
+
+**Note** :- The diagram isn't part of any example, it just depicts an example of how the linked list may look like.
+
+**Example 1:**
+    
+Input:
+N = 4, M = 2
+value = {1,2,3,4}
+pairs = {{1,2},{2,4}}
+Output:1
+Explanation:In this test case, there
+are 4 nodes in linked list.  Among these
+4 nodes,  2 nodes have arbitrary pointer
+set, rest two nodes have arbitrary pointer
+as NULL. Second line tells us the value
+of four nodes. The third line gives the
+information about arbitrary pointers.
+The first node arbitrary pointer is set to
+node 2.  The second node arbitrary pointer
+is set to node 4.
+
+Example 2:
+    
+Input:
+N = 4, M = 2
+value[] = {1,3,5,9}
+pairs[] = {{1,1},{3,4}}
+Output:1
+Explanation:In the given testcase ,
+applying the method as stated in the
+above example, the output will be 1.    
+
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.random = None
+
+def copyRandomList(head):
+    if head is None:
+        return None
+
+    # Step 1: Create a copy of each node and insert it between the original nodes
+    current = head
+    while current is not None:
+        copied = Node(current.data)
+        copied.next = current.next
+        current.next = copied
+        current = copied.next
+
+    # Step 2: Set the random pointers of copied nodes
+    current = head
+    while current is not None:
+        if current.random is not None:
+            current.next.random = current.random.next
+        current = current.next.next
+
+    # Step 3: Separate the original and copied lists
+    original = head
+    copied = head.next
+    copied_head = head.next
+
+    while original is not None:
+        original.next = copied.next
+        if copied.next is not None:
+            copied.next = copied.next.next
+        original = original.next
+        copied = copied.next
+
+    return copied_head
+# Example 1
+head = Node(1)
+head.next = Node(2)
+head.next.next = Node(3)
+head.next.next.next = Node(4)
+
+head.random = head.next
+head.next.random = head.next.next.next
+
+copied_head = copyRandomList(head)
+
+# Printing the copied list and its random pointers
+current = copied_head
+while current is not None:
+    print(current.data, end=" ")
+    if current.random is not None:
+        print("->", current.random.data, end=" ")
+    else:
+        print("-> None", end=" ")
+    current = current.next
+----
+
+
++*Out[9]:*+
+----
+1 -> 2 2 -> 4 3 -> None 4 -> None ----
+
+
++*In[10]:*+
+[source, ipython3]
+----
+# Example 2
+head = Node(1)
+head.next = Node(3)
+head.next.next = Node(5)
+head.next.next.next = Node(9)
+
+head.random = head
+head.next.random = head.next.next.next
+
+copied_head = copyRandomList(head)
+
+# Printing the copied list and its random pointers
+current = copied_head
+while current is not None:
+    print(current.data, end=" ")
+    if current.random is not None:
+        print("->", current.random.data, end=" ")
+    else:
+        print("-> None", end=" ")
+    current = current.next
+----
+
+
++*Out[10]:*+
+----
+1 -> 1 3 -> 9 5 -> None 9 -> None ----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+<aside>
+💡 **Question 5**
+
+Given the `head` of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return *the reordered list*.
+
+The **first** node is considered **odd**, and the **second** node is **even**, and so on.
+
+Note that the relative order inside both the even and odd groups should remain as it was in the input.
+
+You must solve the problem in `O(1)` extra space complexity and `O(n)` time complexity.
+
+**Example 1:**
+    
+Input: head = [1,2,3,4,5]
+Output: [1,3,5,2,4]
+    
+Example 2:
+    
+Input: head = [2,1,3,5,6,4,7]
+Output: [2,3,6,7,1,5,4]    
+----
+
+
++*In[12]:*+
+[source, ipython3]
+----
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def oddEvenList(head):
+    if not head or not head.next:
+        return head
+
+    oddHead = odd = head
+    evenHead = even = head.next
+
+    while even and even.next:
+        odd.next = even.next
+        odd = odd.next
+        even.next = odd.next
+        even = even.next
+
+    odd.next = evenHead
+
+    return oddHead
+# Example 1
+head = ListNode(1)
+head.next = ListNode(2)
+head.next.next = ListNode(3)
+head.next.next.next = ListNode(4)
+head.next.next.next.next = ListNode(5)
+
+reordered = oddEvenList(head)
+while reordered:
+    print(reordered.val, end=" ")
+    reordered = reordered.next
+----
+
+
++*Out[12]:*+
+----
+1 3 5 2 4 ----
+
+
++*In[13]:*+
+[source, ipython3]
+----
+# Example 2
+head = ListNode(2)
+head.next = ListNode(1)
+head.next.next = ListNode(3)
+head.next.next.next = ListNode(5)
+head.next.next.next.next = ListNode(6)
+head.next.next.next.next.next = ListNode(4)
+head.next.next.next.next.next.next = ListNode(7)
+
+reordered = oddEvenList(head)
+while reordered:
+    print(reordered.val, end=" ")
+    reordered = reordered.next
+----
+
+
++*Out[13]:*+
+----
+2 3 6 7 1 5 4 ----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+<aside>
+💡 **Question 6**
+
+Given a singly linked list of size **N**. The task is to **left-shift** the linked list by **k** nodes, where **k** is a given positive integer smaller than or equal to length of the linked list.
+
+**Example 1:**
+
+```
+Input:
+N = 5
+value[] = {2, 4, 7, 8, 9}
+k = 3
+Output:8 9 2 4 7
+Explanation:Rotate 1:4 -> 7 -> 8 -> 9 -> 2
+Rotate 2: 7 -> 8 -> 9 -> 2 -> 4
+Rotate 3: 8 -> 9 -> 2 -> 4 -> 7
+
+```
+
+**Example 2:**
+
+Input:
+N = 8
+value[] = {1, 2, 3, 4, 5, 6, 7, 8}
+k = 4
+Output:5 6 7 8 1 2 3 4
+----
+
+
++*In[14]:*+
+[source, ipython3]
+----
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def leftShift(head, k):
+    if not head or not head.next or k == 0:
+        return head
+
+    length = 0
+    curr = head
+    while curr:
+        length += 1
+        curr = curr.next
+
+    k = k % length
+    if k == 0:
+        return head
+
+    prev = None
+    curr = head
+    for _ in range(k - 1):
+        prev = curr
+        curr = curr.next
+
+    newHead = curr.next
+    curr.next = None
+
+    curr = newHead
+    while curr.next:
+        curr = curr.next
+
+    curr.next = head
+
+    return newHead
+# Example 1
+head = ListNode(2)
+head.next = ListNode(4)
+head.next.next = ListNode(7)
+head.next.next.next = ListNode(8)
+head.next.next.next.next = ListNode(9)
+
+shifted = leftShift(head, 3)
+while shifted:
+    print(shifted.val, end=" ")
+    shifted = shifted.next
+----
+
+
++*Out[14]:*+
+----
+8 9 2 4 7 ----
+
+
++*In[15]:*+
+[source, ipython3]
+----
+# Example 2
+head = ListNode(1)
+head.next = ListNode(2)
+head.next.next = ListNode(3)
+head.next.next.next = ListNode(4)
+head.next.next.next.next = ListNode(5)
+head.next.next.next.next.next = ListNode(6)
+head.next.next.next.next.next.next = ListNode(7)
+head.next.next.next.next.next.next.next = ListNode(8)
+
+shifted = leftShift(head, 4)
+while shifted:
+    print(shifted.val, end=" ")
+    shifted = shifted.next
+----
+
+
++*Out[15]:*+
+----
+5 6 7 8 1 2 3 4 ----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+<aside>
+💡 **Question 7**
+
+You are given the `head` of a linked list with `n` nodes.
+
+For each node in the list, find the value of the **next greater node**. That is, for each node, find the value of the first node that is next to it and has a **strictly larger** value than it.
+
+Return an integer array `answer` where `answer[i]` is the value of the next greater node of the `ith` node (**1-indexed**). If the `ith` node does not have a next greater node, set `answer[i] = 0`.
+
+**Example 1:**
+
+Input: head = [2,1,5]
+Output: [5,5,0]
+
+Example 2:
+    
+Input: head = [2,7,4,3,5]
+Output: [7,0,5,5,0]    
+----
+
+
++*In[16]:*+
+[source, ipython3]
+----
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def nextLargerNodes(head):
+    # Step 1: Create an empty stack and result array
+    stack = []
+    result = []
+
+    # Step 2: Traverse the linked list in reverse order
+    curr = head
+    while curr:
+        # Step 3: Pop elements from the stack
+        while stack and stack[-1] <= curr.val:
+            stack.pop()
+
+        # Step 4: Set the result array
+        if not stack:
+            result.append(0)
+        else:
+            result.append(stack[-1])
+
+        # Step 6: Push the current node's value onto the stack
+        stack.append(curr.val)
+
+        # Move to the next node
+        curr = curr.next
+
+    # Step 7: Reverse the result array
+    result.reverse()
+
+    return result
+# Example 1
+head = ListNode(2)
+head.next = ListNode(1)
+head.next.next = ListNode(5)
+
+result = nextLargerNodes(head)
+print(result) 
+----
+
+
++*Out[16]:*+
+----
+[0, 2, 0]
+----
+
+
++*In[17]:*+
+[source, ipython3]
+----
+# Example 2
+head = ListNode(2)
+head.next = ListNode(7)
+head.next.next = ListNode(4)
+head.next.next.next = ListNode(3)
+head.next.next.next.next = ListNode(5)
+
+result = nextLargerNodes(head)
+print(result)
+----
+
+
++*Out[17]:*+
+----
+[7, 4, 7, 0, 0]
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+<aside>
+💡 **Question 8**
+
+Given the `head` of a linked list, we repeatedly delete consecutive sequences of nodes that sum to `0` until there are no such sequences.
+
+After doing so, return the head of the final linked list.  You may return any such answer.
+
+(Note that in the examples below, all sequences are serializations of `ListNode` objects.)
+
+**Example 1:**
+
+```
+Input: head = [1,2,-3,3,1]
+Output: [3,1]
+Note: The answer [1,2,1] would also be accepted.
+
+```
+
+**Example 2:**
+
+```
+Input: head = [1,2,3,-3,4]
+Output: [1,2,4]
+
+```
+
+**Example 3:**
+
+Input: head = [1,2,3,-3,-2]
+Output: [1]
+----
+
+
++*In[18]:*+
+[source, ipython3]
+----
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def removeZeroSumSublists(head):
+    # Step 1: Create a dummy node
+    dummy = ListNode(0)
+    dummy.next = head
+
+    # Step 2: Traverse the linked list and calculate cumulative sums
+    curr = dummy
+    cumulative_sum = 0
+    cumulative_sum_map = {}
+    while curr:
+        cumulative_sum += curr.val
+        cumulative_sum_map[cumulative_sum] = curr
+        curr = curr.next
+
+    # Step 3: Remove subsequence with cumulative sum of 0
+    curr = dummy
+    cumulative_sum = 0
+    while curr:
+        cumulative_sum += curr.val
+        if cumulative_sum in cumulative_sum_map:
+            # Update next pointer to skip the subsequence
+            curr.next = cumulative_sum_map[cumulative_sum].next
+        curr = curr.next
+
+    # Step 4: Return the head of the modified linked list
+    return dummy.next
+# Example 1
+head = ListNode(1)
+head.next = ListNode(2)
+head.next.next = ListNode(-3)
+head.next.next.next = ListNode(3)
+head.next.next.next.next = ListNode(1)
+
+result = removeZeroSumSublists(head)
+while result:
+    print(result.val, end=" ")
+    result = result.next
+----
+
+
++*Out[18]:*+
+----
+3 1 ----
+
+
++*In[19]:*+
+[source, ipython3]
+----
+# Example 2
+head = ListNode(1)
+head.next = ListNode(2)
+head.next.next = ListNode(3)
+head.next.next.next = ListNode(-3)
+head.next.next.next.next = ListNode(4)
+
+result = removeZeroSumSublists(head)
+while result:
+    print(result.val, end=" ")
+    result = result.next
+----
+
+
++*Out[19]:*+
+----
+1 2 4 ----
+
+
++*In[20]:*+
+[source, ipython3]
+----
+# Example 3
+head = ListNode(1)
+head.next = ListNode(2)
+head.next.next = ListNode(3)
+head.next.next.next = ListNode(-3)
+head.next.next.next.next = ListNode(-2)
+
+result = removeZeroSumSublists(head)
+while result:
+    print(result.val, end=" ")
+    result = result.next
+----
+
+
++*Out[20]:*+
+----
+1 ----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
